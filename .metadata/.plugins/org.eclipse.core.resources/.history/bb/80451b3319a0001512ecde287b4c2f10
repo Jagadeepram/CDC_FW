@@ -169,7 +169,6 @@ void StartTaskUSBSend(void const * argument)
     osDelay(1000);
     count++;
     convertIntToStr(count,sendBuffer,(uint16_t)50);
-    StrNCat(sendBuffer, "\r\n",100);
     CDC_Transmit_HS((uint8_t*)sendBuffer, (uint16_t)strlen(sendBuffer));
   }
   /* USER CODE END StartTaskUSBSend */
