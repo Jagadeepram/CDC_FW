@@ -52,6 +52,7 @@
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 32 */
@@ -158,19 +159,35 @@ void StartTaskUSBSend(void const * argument)
   /* USER CODE BEGIN StartTaskUSBSend */
   /* Infinite loop */
 
-  char sendBuffer[100];
+  char sendtext[100];
+  char sendData[500]={0xFF};
   //char countBuffer[50];
   //uint8_t *rxbuffer;
   int count=0;
-  StrNCopy(sendBuffer,"USB Transfer ",100);
+  StrNCopy(sendtext,"USB Transfer ",100);
  // CDC_Transmit_HS((uint8_t*)sendBuffer, (uint16_t)strlen(sendBuffer));
   for(;;)
   {
-    osDelay(1000);
+    osDelay(3000);
     count++;
-    convertIntToStr(count,sendBuffer,(uint16_t)50);
-    StrNCat(sendBuffer, "\r\n",100);
-    CDC_Transmit_HS((uint8_t*)sendBuffer, (uint16_t)strlen(sendBuffer));
+
+    convertIntToStr(count,sendtext,(uint16_t)50);
+    StrNCat(sendtext,"\r\n",100);
+    CDC_Transmit_HS((uint8_t*)sendtext, (uint16_t)strlen(sendtext));
+
+    if(count%2 == 0)
+    	memset(sendData,'a',495);
+    else
+    	memset(sendData,'b',495);
+
+    StrNCat(sendData,"\r\n",500);
+    sendData[498]='\0';
+    CDC_Transmit_HS((uint8_t*)sendData, (uint16_t)strlen(sendData));
+
+//    convertIntToStr(count,sendtext,(uint16_t)50);
+//    StrNCat(sendtext,"\r\n",100);
+    CDC_Transmit_HS((uint8_t*)sendtext, (uint16_t)strlen(sendtext));
+
   }
   /* USER CODE END StartTaskUSBSend */
 }
